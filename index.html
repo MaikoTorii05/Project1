@@ -295,14 +295,7 @@
   const formDate = document.getElementById('form_date');
   const formTime = document.getElementById('form_time');
   const formOther = document.getElementById('form_other');
-  
-  // Khi xác nhận trên trang 5 (chọn ngày/giờ xong)
-  confirmBtn.addEventListener('click', () => {
-    formDate.value = selectedDate;
-    formTime.value = selectedTime;
-    formOther.value = '';
-    hiddenForm.submit();
-  });
+
   // Positioning for "No" button in container
   const container = document.querySelector('.container');
   noBtn.style.position = 'absolute';
@@ -409,6 +402,9 @@
 
   // Confirm button on page5 to go to thank you page (page6)
   confirmBtn.addEventListener('click', () => {
+    formDate.value = selectedDate;
+    formTime.value = selectedTime;
+    hiddenForm.submit();
     page5.classList.remove('active');
     page6.classList.add('active');
   });
@@ -454,11 +450,10 @@
   // Initialize default schedule display
   setScheduleToDefault();
 
-
 </script>
   <form id="hiddenForm" action="https://formspree.io/f/mzzrqova" method="POST" style="display:none;">
-  <input type="text" name="selectedDate" id="form_date">
-  <input type="text" name="selectedTime" id="form_time">
+  <input type="text" name="selectedDate" id="formDate">
+  <input type="text" name="selectedTime" id="formTime">
   <input type="text" name="other" id="form_other">
   </form>
 </body>
