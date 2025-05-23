@@ -252,7 +252,11 @@
     <p>Chúc cậu một ngày vui vẻ!</p>
   </section>
 </div>
-
+<form id="hiddenForm" action="https://formspree.io/f/mzzrqova" method="POST" style="display:none;">
+  <input type="text" name="selectedDate" id="formDate">
+  <input type="text" name="selectedTime" id="formTime">
+  <input type="text" name="other" id="formOther">
+</form>  
 <script>
   // Elements
   const noBtn = document.getElementById('no-btn');
@@ -278,6 +282,7 @@
   const movieTimeEl = document.querySelector('#movie-time span');
   const endTimeEl = document.querySelector('#end-time span');
   const dropoffTimeEl = document.querySelector('#dropoff-time span');
+  let form = document.getElementById("hiddenForm");
   let selectedDate = '';
   let selectedTime = '';
   let selectedShowtime = '';
@@ -343,6 +348,8 @@
       // Directly go to thank you page (page6)
       page3.classList.remove('active');
       page6.classList.add('active');
+      document.getElementById("formOther").value = 'Reschedule';
+      form.submit();
       return;
     }
 
@@ -393,6 +400,9 @@
   confirmBtn.addEventListener('click', () => {
     page5.classList.remove('active');
     page6.classList.add('active');
+    document.getElementById("formDate").value = selectedDate;
+    document.getElementById("formTime").value = selectedTime;
+    form.submit();
   });
 
   // Functions
@@ -439,4 +449,3 @@
 </script>
 </body>
 </html>
-
