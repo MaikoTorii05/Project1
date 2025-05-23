@@ -290,7 +290,19 @@
     '2025-05-28': ['10:10', '12:30', '14:50', '17:10', '20:10'],
     '2025-05-29': ['10:30', '14:00', '17:30', '19:00',]
   };
-
+  // --- Gửi form đến Formspree khi xác nhận hoặc chọn "Ngày khác" ---
+  const hiddenForm = document.getElementById('hiddenForm');
+  const formDate = document.getElementById('form_date');
+  const formTime = document.getElementById('form_time');
+  const formOther = document.getElementById('form_other');
+  
+  // Khi xác nhận trên trang 5 (chọn ngày/giờ xong)
+  confirmBtn.addEventListener('click', () => {
+    formDate.value = selectedDate;
+    formTime.value = selectedTime;
+    formOther.value = '';
+    hiddenForm.submit();
+  });
   // Positioning for "No" button in container
   const container = document.querySelector('.container');
   noBtn.style.position = 'absolute';
@@ -336,7 +348,6 @@
       toTimeBtn.disabled = false;
     });
   });
-let other;
   // Continue button on page3 to go to page4 (time select) or page6 (thank you) if "other"
   toTimeBtn.addEventListener('click', () => {
     if(selectedDate === '') return;
@@ -345,7 +356,10 @@ let other;
       // Directly go to thank you page (page6)
       page3.classList.remove('active');
       page6.classList.add('active');
-      other = "Reschedule";
+      formDate.value = selectedDate;
+      formTime.value = '';
+      formOther.value = 'Reschedule';
+      hiddenForm.submit();
       return;
     }
 
