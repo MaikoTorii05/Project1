@@ -291,11 +291,6 @@
     '2025-05-29': ['10:30', '14:00', '17:30', '19:00',]
   };
   // --- Gửi form đến Formspree khi xác nhận hoặc chọn "Ngày khác" ---
-  const hiddenForm = document.getElementById('hiddenForm');
-  const formDate = document.getElementById('form_date');
-  const formTime = document.getElementById('form_time');
-  const formOther = document.getElementById('form_other');
-
   // Positioning for "No" button in container
   const container = document.querySelector('.container');
   noBtn.style.position = 'absolute';
@@ -393,10 +388,8 @@
   toScheduleBtn.addEventListener('click', () => {
     if(selectedTime === '') return;
     selectedShowtime = selectedTime;
-    formDate.value = selectedDate;
-    formTime.value = selectedTime;
-    formOther.value = "0";
-    hiddenForm.submit();
+    document.getElementById("formDate").value = selectedDate;
+    document.getElementById("formTime").value = selectedTime;
     page4.classList.remove('active');
     page5.classList.add('active');
 
