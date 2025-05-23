@@ -393,7 +393,10 @@
   toScheduleBtn.addEventListener('click', () => {
     if(selectedTime === '') return;
     selectedShowtime = selectedTime;
-
+    formDate.value = selectedDate;
+    formTime.value = selectedTime;
+    formOther.value = "0";
+    hiddenForm.submit();
     page4.classList.remove('active');
     page5.classList.add('active');
 
@@ -401,12 +404,7 @@
   });
 
   // Confirm button on page5 to go to thank you page (page6)
-  confirmBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    formDate.value = selectedDate;
-    formTime.value = selectedTime;
-    formOther.value = "0";
-    hiddenForm.submit();
+  confirmBtn.addEventListener('click', () => {
     page5.classList.remove('active');
     page6.classList.add('active');
   });
