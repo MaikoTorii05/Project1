@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lời Mời Xem Phim Đặc Biệt</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+DK+Loopet:wght@100..400&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  /* Style cho toàn bộ body */
+  body {
+    margin:0;
+    font-family: 'Dancing Script', cursive, sans-serif;
+    background: linear-gradient(120deg, #fceabb, #f8b500);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    flex-direction: row;
+    gap: 0;
+  }
+  /* Container chính chứa nội dung */
+  .container {
+    background: #fffdf8;
+    border-radius: 20px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    padding: 30px;
+    text-align: center;
+    position: relative;
+  }
+  /* Style tiêu đề chính */
+  h1 {
+    font-size: 3.6rem;
+    margin-bottom: 20px;
+    color: #d85c5c;
+  }
+  /* Style tiêu đề phụ */
+  h2 {
+    font-weight: 500;
+    margin-bottom: 0px;
+    color: #f28c00;
+  }
+  /* Style đoạn text */
+  p {
+    font-family: 'Playwrite DK Loopet', cursive;
+    font-size: 1rem;
+    margin-bottom: -20px;
+  }
+  /* Style chung cho button và hộp chọn option */
+  button, .option-box {
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.15rem;
+    padding: 12px 28px;
+    margin: 40px auto 5px auto; /* changed margin: horizontally centered */
+    font-weight: 600;
+    box-shadow: 0 6px 12px rgba(242, 140, 0, 0.4);
+    transition: all 0.3s ease;
+    user-select: none;
+    background: #f28c00;
+    color: white;
+    display: block; /* make button block for margin auto to center */
+  }
+  /* Hiệu ứng hover cho button và option */
+  button:hover, .option-box:hover {
+    background: #d66700;
+    box-shadow: 0 8px 16px rgba(214, 102, 0, 0.7);
+  }
+  /* Nút "No" với màu sắc khác và vị trí tuyệt đối cho việc chạy trốn chuột */
+  #no-btn {
+    background: #a04d4d;
+    position: absolute;
+    bottom: -20px;
+    left: 240px;
+    color: white;
+    padding: 12px 28px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(160, 77, 77, 0.6);
+    size: fixed;
+  }
+  #yes-btn {
+    position: absolute;
+    bottom: -20px;
+    left: 100px;
+  }
+  /* Hiệu ứng hover cho nút "No" */
+  #no-btn:hover {
+    background: #7b3d3d;
+    box-shadow: 0 6px 12px rgba(123, 61, 61, 0.8);
+  }
+  /* Container chứa các option lịch chiếu, sắp xếp theo flexbox */
+  .options-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  /* Style cho mỗi box option lịch chiếu */
+  .option-box {
+    flex: 1 1 40%;
+    background: #f28c00;
+    color: white;
+    padding: 20px;
+    border-radius: 18px;
+    user-select: none;
+    margin: 10px 15px;
+  }
+  /* Style khi một option được chọn */
+  .option-box.selected {
+    background: #d66700;
+    box-shadow: 0 12px 20px rgba(214, 102, 0, 0.9);
+  }
+  /* Style cho từng block hiển thị thời gian trong lịch trình */
+  .schedule-node {
+    background: #f28c00;
+    margin: 15px 0;
+    border-radius: 15px;
+    padding: 18px;
+    color: white;
+    box-shadow: 0 6px 14px rgba(242, 140, 0, 0.7);
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  /* Style nút xác nhận */
+  #confirm-btn {
+    margin-top: 30px;
+    background: #66a54a;
+    box-shadow: 0 6px 12px rgba(102, 165, 74, 0.6);
+  }
+  /* Hiệu ứng hover cho nút xác nhận */
+  #confirm-btn:hover {
+    background: #4d8039;
+    box-shadow: 0 8px 16px rgba(77, 128, 57, 0.8);
+  }
+  /* Ẩn các section (trang) khi không được kích hoạt */
+  section {
+    display: none;
+  }
+  /* Hiện các section được active */
+  section.active {
+    display: block;
+  }
+  /* Container page 1 để nút No có thể di chuyển */
+  #page1 {
+    position: relative;
+    min-height: 180px;
+  }
+  /* Style cho ảnh trong trang 2 */
+  #page2 img {
+    max-width: 100%;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  #anh img {
+    max-width: 350px;
+    width: 100%;
+    height: auto;
+    margin-right: 15px;
+    margin-left: 0;
+    display: block;
+  }
+  /* New style for button container on page4 to center two buttons side by side */
+  #page4 .button-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+  }
+  /* Override individual buttons margin in .button-row */
+  #page4 .button-row button {
+    margin: 0; /* reset margin because buttons are flex children */
+    width: auto;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+<section id="anh">
+  <img src="anh2.png" />
+</section>
+<div class="container">
+
+  <!-- Trang 1: Lời mời với hai nút Yes và No -->
+  <section id="page1" class="active">
+    <h1>Lời Mời Đặc Biệt</h1>
+    <p>Tớ có một lời mời nhỏ dành riêng cho cậu: </p>
+    <p>Cùng tớ đi xem phim nhé?</p>
+    <button id="yes-btn">Yes</button>
+    <button id="no-btn">No</button>
+  </section>
+
+  <!-- Trang 2: Giới thiệu phim -->
+  <section id="page2">
+    <h1>Bộ Phim Chọn</h1>
+    <img src="anhphim.jpg" alt="Hình ảnh phim" />
+    <h2>"Doraemon Movie 44: Nobita và Cuộc Phiêu Lưu Vào Thế Giới Trong Tranh"</h2>
+    <button id="continue">Tiếp tục</button>
+  </section>
+
+  <!-- Trang 3: Chọn ngày xem phim -->
+  <section id="page3">
+    <h1>Chọn Ngày Xem Phim</h1>
+    <div class="options-container" id="date-options">
+      <div class="option-box" data-date="2025-05-26">26/05/2025</div>
+      <div class="option-box" data-date="2025-05-27">27/05/2025</div>
+      <div class="option-box" data-date="2025-05-28">28/05/2025</div>
+      <div class="option-box" data-date="2025-05-29">29/05/2025</div>
+      <div class="option-box" id="other-date-option" data-date="other">Ngày khác (tớ sẽ contact lại)</div>
+    </div>
+    <button id="to-time-btn" disabled>Tiếp tục</button>
+  </section>
+
+  <!-- Trang 4: Chọn giờ chiếu -->
+  <section id="page4">
+    <h1>Chọn Giờ Chiếu</h1>
+    <div class="options-container" id="time-options">
+      <!-- Các box giờ sẽ được tạo động -->
+    </div>
+    <div class="button-row">
+      <button id="back-to-date-btn">Quay lại</button>
+      <button id="to-schedule-btn" disabled>Tiếp tục</button>
+    </div>
+  </section>
+
+  <!-- Trang 5: Hiển thị lịch trình chi tiết gồm các khoảng thời gian -->
+  <section id="page5">
+    <h1>Lịch Trình</h1>
+    <div class="schedule-node" id="pickup-time">Thời gian đón: <span></span></div>
+    <div class="schedule-node" id="arrival-time">Thời gian đến rạp: <span></span></div>
+    <div class="schedule-node" id="movie-time">Xem phim cùng nhau: <span></span></div>
+    <div class="schedule-node" id="end-time">Thời gian kết thúc phim: <span></span></div>
+    <div class="schedule-node" id="dropoff-time">Thời gian chở về đến nhà: <span></span></div>
+    <p>Mọi kế hoạch ngoài đều được chấp nhận :3</p>
+    <button id="confirm-btn">Xác nhận</button>
+  </section>
+
+  <!-- Trang 6: Lời cảm ơn sau khi xác nhận -->
+  <section id="page6">
+    <h1>Cảm ơn cậu!!!</h1>
+    <p>Rất mong được gặp cậu vào ngày xem phim.</p>
+    <p>Tặng cậu bông hoa nè 🌻</p>
+    <p>Chúc cậu một ngày vui vẻ!</p>
+  </section>
+</div>
+
+<script>
+  // Elements
+  const noBtn = document.getElementById('no-btn');
+  const yesBtn = document.getElementById('yes-btn');
+  const page1 = document.getElementById('page1');
+  const page2 = document.getElementById('page2');
+  const anh2 = document.getElementById('anh');
+  const continueBtn = document.getElementById('continue');
+  const page3 = document.getElementById('page3');
+  const page4 = document.getElementById('page4');
+  const page5 = document.getElementById('page5');
+  const page6 = document.getElementById('page6');
+  const dateOptions = document.querySelectorAll('#date-options .option-box');
+  const toTimeBtn = document.getElementById('to-time-btn');
+  const timeOptionsContainer = document.getElementById('time-options');
+  const toScheduleBtn = document.getElementById('to-schedule-btn');
+  const backToDateBtn = document.getElementById('back-to-date-btn');
+  const confirmBtn = document.getElementById('confirm-btn');
+
+  // Schedule display spans
+  const pickupTimeEl = document.querySelector('#pickup-time span');
+  const arrivalTimeEl = document.querySelector('#arrival-time span');
+  const movieTimeEl = document.querySelector('#movie-time span');
+  const endTimeEl = document.querySelector('#end-time span');
+  const dropoffTimeEl = document.querySelector('#dropoff-time span');
+
+  let selectedDate = '';
+  let selectedTime = '';
+  let selectedShowtime = '';
+
+  // Time data for each date
+  const timeData = {
+    '2025-05-26': ['10:50', '13:10', '15:30', '17:50', '20:10'],
+    '2025-05-27': ['10:50', '13:10', '15:30', '17:50', '20:10'],
+    '2025-05-28': ['10:10', '12:30', '14:50', '17:10', '20:10'],
+    '2025-05-29': ['10:30', '14:00', '17:30', '19:00',]
+  };
+
+  // Positioning for "No" button in container
+  const container = document.querySelector('.container');
+  noBtn.style.position = 'absolute';
+
+  // "No" button runs away on hover
+  noBtn.addEventListener('mouseenter', () => {
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+
+    const maxX = container.clientWidth - btnWidth - 10;
+    const maxY = container.clientHeight - btnHeight - 10;
+    let newX, newY;
+
+    do {
+      newX = Math.floor(Math.random() * maxX);
+      newY = Math.floor(Math.random() * maxY);
+    } while (Math.abs(newX - noBtn.offsetLeft) < 50 && Math.abs(newY - noBtn.offsetTop) < 50);
+
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+  });
+
+  // Click "Yes" to go from page1 to page2 (show movie intro)
+  yesBtn.addEventListener('click', () => {
+    page1.classList.remove('active');
+    page2.classList.add('active');
+    anh2.classList.add('active');
+  });
+
+  // Click continue on page2 to go to page3 (date select)
+  continueBtn.addEventListener('click', () => {
+    page2.classList.remove('active');
+    anh2.classList.remove('active');
+    page3.classList.add('active');
+  });
+
+  // Select a date in page3
+  dateOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      dateOptions.forEach(opt => opt.classList.remove('selected'));
+      option.classList.add('selected');
+      selectedDate = option.dataset.date;
+      toTimeBtn.disabled = false;
+    });
+  });
+
+  // Continue button on page3 to go to page4 (time select) or page6 (thank you) if "other"
+  toTimeBtn.addEventListener('click', () => {
+    if(selectedDate === '') return;
+
+    if(selectedDate === 'other') {
+      // Directly go to thank you page (page6)
+      page3.classList.remove('active');
+      page6.classList.add('active');
+      return;
+    }
+
+    page3.classList.remove('active');
+    page4.classList.add('active');
+
+    // Show times for selected date
+    timeOptionsContainer.innerHTML = '';
+    selectedTime = '';
+    toScheduleBtn.disabled = true;
+
+    if(timeData[selectedDate]) {
+      timeData[selectedDate].forEach(time => {
+        const div = document.createElement('div');
+        div.className = 'option-box';
+        div.dataset.time = time;
+        div.textContent = time;
+        timeOptionsContainer.appendChild(div);
+
+        div.addEventListener('click', () => {
+          // Remove previous selections
+          timeOptionsContainer.querySelectorAll('.option-box').forEach(opt => opt.classList.remove('selected'));
+          div.classList.add('selected');
+          selectedTime = time;
+          toScheduleBtn.disabled = false;
+        });
+      });
+    }
+  });
+
+  // Back button on page4 to return to page3
+  backToDateBtn.addEventListener('click', () => {
+    page4.classList.remove('active');
+    page3.classList.add('active');
+  });
+
+  // Continue button on page4 to go to page5 schedule confirmation
+  toScheduleBtn.addEventListener('click', () => {
+    if(selectedTime === '') return;
+    selectedShowtime = selectedTime;
+
+    page4.classList.remove('active');
+    page5.classList.add('active');
+
+    updateSchedule(selectedDate, selectedShowtime);
+  });
+
+  // Confirm button on page5 to go to thank you page (page6)
+  confirmBtn.addEventListener('click', () => {
+    page5.classList.remove('active');
+    page6.classList.add('active');
+  });
+
+  // Functions
+  function timeStrToDate(t, dateStr) {
+    const [h, m] = t.split(':').map(Number);
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month -1, day, h, m, 0);
+  }
+
+  function formatTime(date) {
+    const pad = n => n.toString().padStart(2,'0');
+    return pad(date.getHours()) + ':' + pad(date.getMinutes());
+  }
+
+  function updateSchedule(dateStr, timeStr) {
+    if(!dateStr || !timeStr) {
+      setScheduleToDefault();
+      return;
+    }
+    const showtime = timeStrToDate(timeStr, dateStr);
+    const pickup = new Date(showtime.getTime() - 45*60000);    // Đón trước 45 phút
+    const arrival = new Date(showtime.getTime() - 15*60000);   // Đến rạp trước 15 phút
+    const movieEnd = new Date(showtime.getTime() + 105*60000); // Xem phim trong 105 phút
+    const dropoff = new Date(movieEnd.getTime() + 30*60000);   // Chở về sau 30 phút
+
+    pickupTimeEl.textContent = formatTime(pickup);
+    arrivalTimeEl.textContent = formatTime(arrival);
+    movieTimeEl.textContent = formatTime(showtime) + ' - ' + formatTime(movieEnd);
+    endTimeEl.textContent = formatTime(movieEnd);
+    dropoffTimeEl.textContent = formatTime(dropoff);
+  }
+
+  function setScheduleToDefault() {
+    pickupTimeEl.textContent = '-';
+    arrivalTimeEl.textContent = '-';
+    movieTimeEl.textContent = '-';
+    endTimeEl.textContent = '-';
+    dropoffTimeEl.textContent = '-';
+  }
+
+  // Initialize default schedule display
+  setScheduleToDefault();
+
+</script>
+</body>
+</html>
+
